@@ -1,2 +1,6 @@
 <h1>Weather</h1>
-<app-search></app-search>
+<app-search #search></app-search>
+
+@if(search.weatherInfo) {
+<app-table [weatherData]="search.weatherInfo"></app-table>
+}

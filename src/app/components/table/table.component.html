@@ -1,0 +1,32 @@
+
+
+<h2 class="city-name"></h2>
+<table class="table">
+    <thead>
+        <tr>
+            <td>Time</td>
+            <td>Tempreture</td>
+            <td>Feels like</td>
+            <td>Weather</td>
+            <td>Precipitation</td>
+            <td>Cloudiness</td>
+        </tr>
+    </thead>
+    <tbody>
+        @for (item of weatherData()?.list; track $index) {
+        <tr>
+            <td>{{item.dt_txt}}</td>
+            <td>{{item.main.temp}}</td>
+            <td>{{item.main.feels_like}}</td>
+            <!--        <td>{{item.weather[0].icon}}</td> -->
+            <td>
+                <img src='https://openweathermap.org/img/wn/13d@2x.png' alt="">
+            </td>
+            <td>{{item.pop}}%</td>
+            <td>{{item.clouds.all}}%</td>
+
+        </tr>
+        }
+
+    </tbody>
+</table>

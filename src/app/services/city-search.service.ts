@@ -19,6 +19,6 @@ export class CitySearchService {
 
 
   getWeatherByCity(latitude: number, longitud: number): Observable<WeatherResponse> {
-    return this.http.get<WeatherResponse>(`https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitud}&appid=${environment.API_KEY}&cnt=1`)
+    return this.http.get<WeatherResponse>(`https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitud}&appid=${environment.API_KEY}&cnt=8`)
   }
 }
