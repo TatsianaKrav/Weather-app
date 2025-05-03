@@ -7,7 +7,12 @@ export class TimePipe implements PipeTransform {
 
   transform(value: string): string {
     const date = new Date(value);
-    return `${date.getHours()}:${date.getMinutes()}0`;
+    const hours = date.getHours();
+    const mins = date.getMinutes();
+
+    const hoursToDisplay = hours < 10 ? `0${hours}` : hours;
+    const minsToDisplay = mins < 10 ? `0${mins}` : mins;
+    return `${hoursToDisplay}:${minsToDisplay}`;
   }
 
 }

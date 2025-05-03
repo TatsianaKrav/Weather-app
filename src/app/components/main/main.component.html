@@ -1,6 +1,8 @@
-<h1>Weather</h1>
-<app-search #search></app-search>
+<div class="container">
+    <h1>Weather</h1>
+    <app-search #search></app-search>
 
-@if(search.weatherInfo) {
-<app-table [weatherData]="search.weatherInfo"></app-table>
-}
+    @if(search.weatherInfo) {
+    <app-table [weatherData]="search.weatherInfo"></app-table>
+    }
+</div>
