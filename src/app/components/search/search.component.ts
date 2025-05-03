@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CitySearchService } from '../../services/city-search.service';
 import { WeatherResponse } from '../../models/weather-response';
 import { debounceTime } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class SearchComponent {
   showMenu = false;
   hasData = '';
 
-  constructor(public citySearchService: CitySearchService) {
+  constructor(public citySearchService: CitySearchService, private destroyRef: DestroyRef) {
 
     document.addEventListener('keydown', (event) => {
       if (event.code === 'Enter') {
@@ -31,12 +32,17 @@ export class SearchComponent {
     this.searchControl.valueChanges
       .pipe(
         debounceTime(500),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(value => {
         if (value) {
-          this.citySearchService.getCityInfo(value).subscribe(data => {
-            this.dropdownOptions = data.map(cityObj => cityObj.name);
-          })
+          this.citySearchService.getCityInfo(value)
+            .pipe(
+              takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(data => {
+              this.dropdownOptions = data.map(cityObj => cityObj.name);
+            })
 
           this.hasData = 'true';
         } else {
@@ -65,24 +71,32 @@ export class SearchComponent {
     const value = this.searchControl.getRawValue();
 
     if (value) {
-      this.citySearchService.getCityInfo(value).subscribe(data => {
-        const cityToFind = data.find(city => city.name.toLowerCase() === value.toLowerCase());
+      this.citySearchService.getCityInfo(value)
+        .pipe(
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe(data => {
+          const cityToFind = data.find(city => city.name.toLowerCase() === value.toLowerCase());
 
-        if (cityToFind) {
-          this.hasData = 'true';
-          const lat = cityToFind.lat;
-          const lon = Number(cityToFind.lon);
+          if (cityToFind) {
+            this.hasData = 'true';
+            const lat = cityToFind.lat;
+            const lon = Number(cityToFind.lon);
 
-          this.citySearchService.getWeatherByCity(lat, lon).subscribe(info => {
-            if (info) {
-              this.weatherInfo = info;
-            }
-          })
-        } else {
-          this.hasData = 'false';
-          this.weatherInfo = null;
-        }
-      })
+            this.citySearchService.getWeatherByCity(lat, lon)
+              .pipe(
+                takeUntilDestroyed(this.destroyRef)
+              )
+              .subscribe(info => {
+                if (info) {
+                  this.weatherInfo = info;
+                }
+              })
+          } else {
+            this.hasData = 'false';
+            this.weatherInfo = null;
+          }
+        })
 
     }
 

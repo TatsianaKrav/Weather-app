@@ -25,7 +25,7 @@ export class CitySearchService {
 
 
   getWeatherByCity(latitude: number, longitud: number): Observable<WeatherResponse> {
-    return this.http.get<WeatherResponse>(`https://api.penweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitud}&appid=${environment.API_KEY}&cnt=8`)
+    return this.http.get<WeatherResponse>(`https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitud}&appid=${environment.API_KEY}&cnt=8`)
       .pipe(
         catchError(err => {
           this.hasError.next(true);
