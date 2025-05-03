@@ -1,1 +1,35 @@
-/*# sourceMappingURL=search.component.css.map */
+.search-wrapper {
+  position: relative;
+}
+.search-wrapper .dropdown {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s linear;
+  padding: 1rem;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  border-top: none;
+  border-radius: 5px;
+  background-color: #fff;
+  width: 100%;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.search-wrapper .dropdown.active {
+  opacity: 1;
+  visibility: visible;
+}
+.search-wrapper .dropdown .option {
+  cursor: pointer;
+  width: 100%;
+}
+.search-wrapper .no-data {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}/*# sourceMappingURL=search.component.css.map */

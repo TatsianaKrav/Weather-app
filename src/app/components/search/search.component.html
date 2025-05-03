@@ -1,6 +1,29 @@
-<input type="text" list="cities" autocomplete="on" placeholder="Weather in your city" [formControl]="searchControl">
-<datalist id="cities">
+<div class="search-wrapper">
+    <input type="text" list="cities" autocomplete="on" placeholder="Weather in your city" [formControl]="searchControl"
+        (input)="menuHandle()">
+
+    @if(hasData) {
+    @if(hasData === 'true') {
+    <div class="dropdown" [class.active]="dropdownOptions.length > 0 && showMenu">
+        @for (option of dropdownOptions; track $index) {
+        <div class="option" (click)="handleOption($event)">{{option}}</div>
+        }
+    </div>
+    } @else{
+    <div class="no-data">There is no data</div>
+    }
+    }
+</div>
+
+
+
+
+
+<!-- <datalist id="cities">
     @for (optionName of dropdownOptions; track $index) {
     <option value={{optionName}}></option>
     }
-</datalist>
+</datalist> -->
+
+
+<!-- <app-dropdown [options]="dropdownOptions"></app-dropdown> -->
