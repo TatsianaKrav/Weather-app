@@ -19,7 +19,7 @@ export class SearchComponent {
   showMenu = false;
   hasData = '';
 
-  constructor(private citySearchService: CitySearchService) {
+  constructor(public citySearchService: CitySearchService) {
 
     document.addEventListener('keydown', (event) => {
       if (event.code === 'Enter') {

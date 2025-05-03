@@ -3,7 +3,7 @@
         (input)="menuHandle()">
 
     @if(hasData) {
-    @if(hasData === 'true') {
+    @if(hasData === 'true' && !citySearchService.hasError.getValue()) {
     <div class="dropdown" [class.active]="dropdownOptions.length > 0 && showMenu">
         @for (option of dropdownOptions; track $index) {
         <div class="option" (click)="handleOption($event)">{{option}}</div>
