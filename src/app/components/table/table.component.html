@@ -1,6 +1,5 @@
-
-
 <h2 class="city-name"></h2>
+
 <table class="table">
     <thead>
         <tr>
@@ -14,15 +13,16 @@
     </thead>
     <tbody>
         @for (item of weatherData()?.list; track $index) {
+        @let pathToImg = `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`;
+
         <tr>
-            <td>{{item.dt_txt}}</td>
-            <td>{{item.main.temp}}</td>
-            <td>{{item.main.feels_like}}</td>
-            <!--        <td>{{item.weather[0].icon}}</td> -->
+            <td>{{item.dt_txt | time}}</td>
+            <td>{{item.main.temp | degrees}}&deg;C</td>
+            <td>{{item.main.feels_like | degrees}}&deg;C</td>
             <td>
-                <img src='https://openweathermap.org/img/wn/13d@2x.png' alt="">
+                <img src={{pathToImg}} alt={{item.weather[0].main}}>
             </td>
-            <td>{{item.pop}}%</td>
+            <td>{{item.pop | precip}}%</td>
             <td>{{item.clouds.all}}%</td>
 
         </tr>
