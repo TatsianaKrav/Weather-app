@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment.development';
+import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 import { CityInfoResponse } from '../models/city-info-response';
 import { WeatherResponse } from '../models/weather-response';
+import { API_KEY, BASE_API_URL_TOKEN } from '../../environments/environment.token';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +11,13 @@ import { WeatherResponse } from '../models/weather-response';
 export class CitySearchService {
   hasError = new BehaviorSubject(false);
 
-  constructor(private http: HttpClient) {
+  constructor(@Inject(BASE_API_URL_TOKEN) private baseApi: string,
+    @Inject(API_KEY) private apiKey: string,
+    private http: HttpClient) {
   }
 
   getCityInfo(cityName: string): Observable<CityInfoResponse[]> {
-    return this.http.get<CityInfoResponse[]>(`http://api.openweathermap.org/geo/1.0/direct?q={${cityName}}&limit=10&appid=${environment.API_KEY}`)
+    return this.http.get<CityInfoResponse[]>(`${this.baseApi}/geo/1.0/direct?q={${cityName}}&limit=10&appid=${this.apiKey}`)
       .pipe(
         catchError(err => {
           return of([])
@@ -25,7 +27,7 @@ export class CitySearchService {
 
 
   getWeatherByCity(latitude: number, longitud: number): Observable<WeatherResponse> {
-    return this.http.get<WeatherResponse>(`https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitud}&appid=${environment.API_KEY}&cnt=8`)
+    return this.http.get<WeatherResponse>(`${this.baseApi}/data/2.5/forecast?lat=${latitude}&lon=${longitud}&appid=${this.apiKey}&cnt=8`)
       .pipe(
         catchError(err => {
           this.hasError.next(true);
