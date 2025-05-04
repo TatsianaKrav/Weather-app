@@ -3,6 +3,7 @@
         (input)="menuHandle()">
 
     @if(hasData) {
+
     @if(hasData === 'true' && !citySearchService.hasError.getValue()) {
     <div class="dropdown" [class.active]="dropdownOptions.length > 0 && showMenu">
         @for (option of dropdownOptions; track $index) {
@@ -10,7 +11,7 @@
         }
     </div>
     } @else{
-    <div class="no-data">There is no data</div>
+    <div class="no-data">{{message}}</div>
     }
     }
 </div>

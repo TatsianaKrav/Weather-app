@@ -19,6 +19,7 @@ export class SearchComponent {
   weatherInfo: WeatherResponse | null = null;
   showMenu = false;
   hasData = '';
+  message = 'There is no data';
 
   constructor(public citySearchService: CitySearchService, private destroyRef: DestroyRef) {
 
@@ -42,13 +43,19 @@ export class SearchComponent {
             )
             .subscribe(data => {
               this.dropdownOptions = data.map(cityObj => cityObj.name);
-            })
+            },
+
+            )
 
           this.hasData = 'true';
         } else {
           this.hasData = '';
         }
       })
+
+    this.citySearchService.hasError.subscribe(value => {
+      this.message = value ? 'Request failed' : 'There is no data';
+    })
   }
 
   handleOption(event: Event): void {

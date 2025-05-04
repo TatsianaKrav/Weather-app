@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, throwError } from 'rxjs';
 import { CityInfoResponse } from '../models/city-info-response';
 import { WeatherResponse } from '../models/weather-response';
 import { API_KEY, BASE_API_URL_TOKEN } from '../../environments/environment.token';
@@ -29,9 +29,9 @@ export class CitySearchService {
   getWeatherByCity(latitude: number, longitud: number): Observable<WeatherResponse> {
     return this.http.get<WeatherResponse>(`${this.baseApi}/data/2.5/forecast?lat=${latitude}&lon=${longitud}&appid=${this.apiKey}&cnt=8`)
       .pipe(
-        catchError(err => {
+        catchError((err) => {
           this.hasError.next(true);
-          throw Error('request failed')
+          return throwError(() => err.message);
         })
       )
   }
