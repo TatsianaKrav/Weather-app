@@ -1,9 +1,10 @@
-import { Component, DestroyRef } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CitySearchService } from '../../services/city-search.service';
 import { WeatherResponse } from '../../models/weather-response';
 import { debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -13,7 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss'
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit {
   protected readonly searchControl = new FormControl('');
   dropdownOptions: string[] = [];
   weatherInfo: WeatherResponse | null = null;
@@ -21,7 +22,12 @@ export class SearchComponent {
   hasData = '';
   message = 'There is no data';
 
-  constructor(public citySearchService: CitySearchService, private destroyRef: DestroyRef) {
+  constructor(
+    public citySearchService: CitySearchService,
+    private destroyRef: DestroyRef,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {
 
     document.addEventListener('keydown', (event) => {
       if (event.code === 'Enter') {
@@ -50,11 +56,32 @@ export class SearchComponent {
           this.hasData = 'true';
         } else {
           this.hasData = '';
+          this.router.navigate(['/main']);
+          this.weatherInfo = null;
         }
       })
+  }
+
+  ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params['lat'] && params['lon']) {
+        this.citySearchService.getWeatherByCity(params['lat'], params['lon'])
+          .pipe(
+            takeUntilDestroyed(this.destroyRef)
+          )
+          .subscribe(info => {
+            if (info) {
+              this.hasData = 'true';
+              this.weatherInfo = info;
+            }
+          })
+      }
+    })
 
     this.citySearchService.hasError.subscribe(value => {
-      this.message = value ? 'Request failed' : 'There is no data';
+      value
+        ? (this.message = 'Request failed', this.router.navigate(['/main']))
+        : this.message = 'There is no data';
     })
   }
 
@@ -96,11 +123,20 @@ export class SearchComponent {
               )
               .subscribe(info => {
                 if (info) {
+
+                  //add params
+                  this.router.navigate(['/main'], {
+                    queryParams: {
+                      lat: lat,
+                      lon: lon
+                    }
+                  })
                   this.weatherInfo = info;
                 }
               })
           } else {
             this.hasData = 'false';
+            this.router.navigate(['/main']);
             this.weatherInfo = null;
           }
         })
