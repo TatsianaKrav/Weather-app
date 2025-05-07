@@ -6,13 +6,12 @@ import { debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-search',
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './search.component.html',
-  styleUrl: './search.component.scss'
+  styleUrl: './search.component.scss',
 })
 export class SearchComponent implements OnInit {
   protected readonly searchControl = new FormControl('');
@@ -28,30 +27,23 @@ export class SearchComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
-
     document.addEventListener('keydown', (event) => {
       if (event.code === 'Enter') {
         this.getWeather();
         this.hideMenu();
       }
-    })
+    });
 
     this.searchControl.valueChanges
-      .pipe(
-        debounceTime(500),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe(value => {
+      .pipe(debounceTime(500), takeUntilDestroyed(this.destroyRef))
+      .subscribe((value) => {
         if (value) {
-          this.citySearchService.getCityInfo(value)
-            .pipe(
-              takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe(data => {
-              this.dropdownOptions = data.map(cityObj => cityObj.name);
-            },
-
-            )
+          this.citySearchService
+            .getCityInfo(value)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((data) => {
+              this.dropdownOptions = data.map((cityObj) => cityObj.name);
+            });
 
           this.hasData = 'true';
         } else {
@@ -59,31 +51,30 @@ export class SearchComponent implements OnInit {
           this.router.navigate(['/main']);
           this.weatherInfo = null;
         }
-      })
+      });
   }
   //switchMap, observ
 
   ngOnInit(): void {
-    this.activatedRoute.queryParams.subscribe(params => {
+    this.activatedRoute.queryParams.subscribe((params) => {
       if (params['lat'] && params['lon']) {
-        this.citySearchService.getWeatherByCity(params['lat'], params['lon'])
-          .pipe(
-            takeUntilDestroyed(this.destroyRef)
-          )
-          .subscribe(info => {
+        this.citySearchService
+          .getWeatherByCity(params['lat'], params['lon'])
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((info) => {
             if (info) {
               this.hasData = 'true';
               this.weatherInfo = info;
             }
-          })
+          });
       }
-    })
+    });
 
-    this.citySearchService.hasError.subscribe(value => {
+    this.citySearchService.hasError.subscribe((value) => {
       value
-        ? (this.message = 'Request failed', this.router.navigate(['/main']))
-        : this.message = 'There is no data';
-    })
+        ? ((this.message = 'Request failed'), this.router.navigate(['/main']))
+        : (this.message = 'There is no data');
+    });
   }
 
   handleOption(event: Event): void {
@@ -106,49 +97,44 @@ export class SearchComponent implements OnInit {
     const value = this.searchControl.getRawValue();
 
     if (value) {
-      this.citySearchService.getCityInfo(value)
-        .pipe(
-          takeUntilDestroyed(this.destroyRef)
-        )
-        .subscribe(data => {
-          const cityToFind = data.find(city => city.name.toLowerCase() === value.toLowerCase());
+      this.citySearchService
+        .getCityInfo(value)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((data) => {
+          const cityToFind = data.find(
+            (city) => city.name.toLowerCase() === value.toLowerCase()
+          );
 
           if (cityToFind) {
             this.hasData = 'true';
             const lat = cityToFind.lat;
             const lon = Number(cityToFind.lon);
 
-            this.citySearchService.getWeatherByCity(lat, lon)
-              .pipe(
-                takeUntilDestroyed(this.destroyRef)
-              )
-              .subscribe(info => {
+            this.citySearchService
+              .getWeatherByCity(lat, lon)
+              .pipe(takeUntilDestroyed(this.destroyRef))
+              .subscribe((info) => {
                 if (info) {
-
                   //add params
                   this.router.navigate(['/main'], {
                     queryParams: {
                       lat: lat,
-                      lon: lon
-                    }
-                  })
+                      lon: lon,
+                    },
+                  });
                   this.weatherInfo = info;
                 }
-              })
+              });
           } else {
             this.hasData = 'false';
             this.router.navigate(['/main']);
             this.weatherInfo = null;
           }
-        })
-
+        });
     }
-
   }
 
   menuHandle(): void {
     this.showMenu = true;
   }
-
 }
-

@@ -10,7 +10,7 @@ import { TimePipe } from '../../pipes/time.pipe';
   standalone: true,
   imports: [CommonModule, PrecipPipe, DegreesPipe, TimePipe],
   templateUrl: './table.component.html',
-  styleUrl: './table.component.scss'
+  styleUrl: './table.component.scss',
 })
 export class TableComponent {
   readonly weatherData = input<WeatherResponse>();

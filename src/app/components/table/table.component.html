@@ -1,38 +1,40 @@
 @let weather = weatherData();
 
 <div class="table-wrapper">
-    @if(weather && weather.city) {
-    <h2 class="city-name">{{weather.city.name}}</h2>
-    }
+  @if (weather && weather.city) {
+    <h2 class="city-name">{{ weather.city.name }}</h2>
+  }
 
-    <table class="table">
-        <thead>
-            <tr>
-                <td>Time</td>
-                <td>Tempreture</td>
-                <td>Feels like</td>
-                <td>Weather</td>
-                <td>Precipitation</td>
-                <td>Cloudiness</td>
-            </tr>
-        </thead>
-        <tbody>
-            @for (item of weather?.list; track $index) {
-            @let pathToImg = `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`;
+  <table class="table">
+    <thead>
+      <tr>
+        <td>Time</td>
+        <td>Tempreture</td>
+        <td>Feels like</td>
+        <td>Weather</td>
+        <td>Precipitation</td>
+        <td>Cloudiness</td>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of weather?.list; track $index) {
+        @let pathToImg =
+          `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`;
 
-            <tr>
-                <td>{{item.dt_txt | time}}</td>
-                <td>{{item.main.temp | degrees}}&deg;C</td>
-                <td>{{item.main.feels_like | degrees}}&deg;C</td>
-                <td>
-                    <img src={{pathToImg}} alt={{item.weather[0].main}}>
-                </td>
-                <td>{{item.pop | precip}}%</td>
-                <td>{{item.clouds.all}}%</td>
-
-            </tr>
-            }
-
-        </tbody>
-    </table>
+        <tr>
+          <td>{{ item.dt_txt | time }}</td>
+          <td>{{ item.main.temp | degrees }}&deg;C</td>
+          <td>{{ item.main.feels_like | degrees }}&deg;C</td>
+          <td>
+            <img
+              src="{{ pathToImg }}"
+              alt="{{ item.weather[0].main }}"
+            />
+          </td>
+          <td>{{ item.pop | precip }}%</td>
+          <td>{{ item.clouds.all }}%</td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </div>

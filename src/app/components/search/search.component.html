@@ -1,30 +1,38 @@
 <div class="search-wrapper">
-    <input type="text" list="cities" autocomplete="on" placeholder="Weather in your city" [formControl]="searchControl"
-        (input)="menuHandle()">
+  <input
+    type="text"
+    list="cities"
+    autocomplete="on"
+    placeholder="Weather in your city"
+    [formControl]="searchControl"
+    (input)="menuHandle()"
+  />
 
-    @if(hasData) {
-
-    @if(hasData === 'true' && !citySearchService.hasError.getValue()) {
-    <div class="dropdown" [class.active]="dropdownOptions.length > 0 && showMenu">
+  @if (hasData) {
+    @if (hasData === "true" && !citySearchService.hasError.getValue()) {
+      <div
+        class="dropdown"
+        [class.active]="dropdownOptions.length > 0 && showMenu"
+      >
         @for (option of dropdownOptions; track $index) {
-        <div class="option" (click)="handleOption($event)">{{option}}</div>
+          <div
+            class="option"
+            (click)="handleOption($event)"
+          >
+            {{ option }}
+          </div>
         }
-    </div>
-    } @else{
-    <div class="no-data">{{message}}</div>
+      </div>
+    } @else {
+      <div class="no-data">{{ message }}</div>
     }
-    }
+  }
 </div>
-
-
-
-
 
 <!-- <datalist id="cities">
     @for (optionName of dropdownOptions; track $index) {
     <option value={{optionName}}></option>
     }
 </datalist> -->
-
 
 <!-- <app-dropdown [options]="dropdownOptions"></app-dropdown> -->

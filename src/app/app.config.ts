@@ -17,6 +17,6 @@ export const appConfig: ApplicationConfig = {
     {
       provide: API_KEY,
       useValue: environment.apiKey,
-    }
-  ]
+    },
+  ],
 };

@@ -1,6 +1,13 @@
-<div class="menu" [class.active]="options() && options()!.length > 0" #menu>
-
-    @for (option of options(); track $index) {
-    <span class="option" (click)="handleOption()">{{option}}</span>
-    }
+<div
+  class="menu"
+  [class.active]="options() && options()!.length > 0"
+  #menu
+>
+  @for (option of options(); track $index) {
+    <span
+      class="option"
+      (click)="handleOption()"
+      >{{ option }}</span
+    >
+  }
 </div>

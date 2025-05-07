@@ -4,7 +4,7 @@ import { Component, ElementRef, input, viewChild } from '@angular/core';
   selector: 'app-dropdown',
   imports: [],
   templateUrl: './dropdown.component.html',
-  styleUrl: './dropdown.component.scss'
+  styleUrl: './dropdown.component.scss',
 })
 export class DropdownComponent {
   readonly options = input<string[]>();

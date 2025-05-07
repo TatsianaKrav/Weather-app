@@ -1,8 +1,11 @@
-<div class="container" (click)="search.hideMenu()">
-    <h1>Weather</h1>
-    <app-search #search></app-search>
+<div
+  class="container"
+  (click)="search.hideMenu()"
+>
+  <h1>Weather</h1>
+  <app-search #search></app-search>
 
-    @if(search.weatherInfo && search.hasData === 'true') {
+  @if (search.weatherInfo && search.hasData === "true") {
     <app-table [weatherData]="search.weatherInfo"></app-table>
-    }
+  }
 </div>
