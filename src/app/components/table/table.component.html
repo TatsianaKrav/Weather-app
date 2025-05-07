@@ -1,14 +1,19 @@
 @let weather = weatherData();
 
 <div class="table-wrapper">
-  @if (weather && weather.city) {
-    <h2 class="city-name">{{ weather.city.name }}</h2>
+  @if (weather && weather.cityName) {
+    <h2 class="city-name">{{ weather.cityName }}</h2>
   }
 
   <table class="table">
     <thead>
       <tr>
-        <td>Time</td>
+        @if (weather && weather.period) {
+          <td>Time</td>
+        } @else if (weather && !weather.period) {
+          <td>Date</td>
+        }
+
         <td>Tempreture</td>
         <td>Feels like</td>
         <td>Weather</td>
@@ -22,7 +27,12 @@
           `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`;
 
         <tr>
-          <td>{{ item.dt_txt | time }}</td>
+          @if (weather && weather.period) {
+            <td>{{ item.dt_txt | time }}</td>
+          } @else if (weather && !weather.period) {
+            <td>{{ item.dt_txt | day }}</td>
+          }
+
           <td>{{ item.main.temp | degrees }}&deg;C</td>
           <td>{{ item.main.feels_like | degrees }}&deg;C</td>
           <td>

@@ -5,11 +5,12 @@
     autocomplete="on"
     placeholder="Weather in your city"
     [formControl]="searchControl"
-    (input)="menuHandle()"
+    (input)="showMenu = true"
+    #search
   />
 
-  @if (hasData) {
-    @if (hasData === "true" && !citySearchService.hasError.getValue()) {
+  @if (searchControl.touched || searchControl.dirty) {
+    @if (hasData && !citySearchService.hasError.getValue()) {
       <div
         class="dropdown"
         [class.active]="dropdownOptions.length > 0 && showMenu"
@@ -27,12 +28,24 @@
       <div class="no-data">{{ message }}</div>
     }
   }
+
+  <div class="tabs">
+    <input
+      type="radio"
+      id="time"
+      name="tab"
+      [checked]="isCheckedTime"
+      (change)="handleTab()"
+    />
+    <label for="time">By time</label>
+
+    <input
+      type="radio"
+      id="days"
+      name="tab"
+      [checked]="!isCheckedTime"
+      (change)="handleTab()"
+    />
+    <label for="days">By days</label>
+  </div>
 </div>
-
-<!-- <datalist id="cities">
-    @for (optionName of dropdownOptions; track $index) {
-    <option value={{optionName}}></option>
-    }
-</datalist> -->
-
-<!-- <app-dropdown [options]="dropdownOptions"></app-dropdown> -->

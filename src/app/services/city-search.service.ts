@@ -47,4 +47,13 @@ export class CitySearchService {
         })
       );
   }
+
+  getWeatherByDays(
+    latitude: number,
+    longitud: number
+  ): Observable<WeatherResponse> {
+    return this.http.get<WeatherResponse>(
+      `${this.baseApi}/data/2.5/forecast?lat=${latitude}&lon=${longitud}&appid=${this.apiKey}`
+    );
+  }
 }

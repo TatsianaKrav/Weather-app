@@ -1,25 +1,31 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CitySearchService } from '../../services/city-search.service';
-import { WeatherResponse } from '../../models/weather-response';
-import { debounceTime, Observable, switchMap } from 'rxjs';
+import {
+  CityAndWeatherModel,
+  WeatherInfo,
+} from '../../models/weather-response';
+import { debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FormsModule],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
 })
 export class SearchComponent implements OnInit {
   protected readonly searchControl = new FormControl('');
   dropdownOptions: string[] = [];
-  weatherInfo: WeatherResponse | null = null;
+  weatherInfo: CityAndWeatherModel | null = null;
   showMenu = false;
-  hasData = '';
+  hasData = false;
   message = 'There is no data';
+  isCheckedTime = true;
+  lat = 0;
+  lon = 0;
 
   constructor(
     public citySearchService: CitySearchService,
@@ -45,9 +51,8 @@ export class SearchComponent implements OnInit {
               this.dropdownOptions = data.map((cityObj) => cityObj.name);
             });
 
-          this.hasData = 'true';
+          this.hasData = true;
         } else {
-          this.hasData = '';
           this.router.navigate(['/main']);
           this.weatherInfo = null;
         }
@@ -56,36 +61,24 @@ export class SearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
-      if (params['lat'] && params['lon']) {
-        this.citySearchService
-          .getWeatherByCity(params['lat'], params['lon'])
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((info) => {
-            if (info) {
-              this.hasData = 'true';
-              this.weatherInfo = info;
-            }
-          });
+      this.hasData = true;
+      const lat = Number(params['lat']);
+      const lon = Number(params['lon']);
+      const filter = params['by'];
+
+      if (lat && lon && filter) {
+        this.lat = lat;
+        this.lon = lon;
+
+        if (filter === 'time') {
+          this.getWeatherByTime(lat, lon);
+          this.isCheckedTime = true;
+        } else if (filter === 'days') {
+          this.getWeatherByDays(lat, lon);
+          this.isCheckedTime = false;
+        }
       }
     });
-
-    //switchMap ?
-
-    /*   .pipe(
-        switchMap(params => {
-          const lat = params['lat'];
-          const lon = params['lon'];
-
-          return this.citySearchService.getWeatherByCity(lat, lon);
-        })
-      )
-      .subscribe((info) => {
-
-        if (info) {
-          this.hasData = 'true';
-          this.weatherInfo = info;
-        }
-      }); */
 
     this.citySearchService.hasError.subscribe((value) => {
       value
@@ -110,6 +103,11 @@ export class SearchComponent implements OnInit {
     this.showMenu = false;
   }
 
+  handleTab(): void {
+    this.isCheckedTime = !this.isCheckedTime;
+    this.getWeather();
+  }
+
   getWeather(): void {
     const value = this.searchControl.getRawValue();
 
@@ -123,35 +121,85 @@ export class SearchComponent implements OnInit {
           );
 
           if (cityToFind) {
-            this.hasData = 'true';
+            this.hasData = true;
             const lat = cityToFind.lat;
             const lon = Number(cityToFind.lon);
 
-            this.citySearchService
-              .getWeatherByCity(lat, lon)
-              .pipe(takeUntilDestroyed(this.destroyRef))
-              .subscribe((info) => {
-                if (info) {
-                  //add params
-                  this.router.navigate(['/main'], {
-                    queryParams: {
-                      lat: lat,
-                      lon: lon,
-                    },
-                  });
-                  this.weatherInfo = info;
-                }
-              });
+            this.isCheckedTime
+              ? this.getWeatherByTime(lat, lon)
+              : this.getWeatherByDays(lat, lon);
           } else {
-            this.hasData = 'false';
+            this.hasData = false;
             this.router.navigate(['/main']);
             this.weatherInfo = null;
           }
         });
+    } else if (!value && this.lat && this.lon) {
+      this.isCheckedTime
+        ? this.getWeatherByTime(this.lat, this.lon)
+        : this.getWeatherByDays(this.lat, this.lon);
     }
   }
 
-  menuHandle(): void {
-    this.showMenu = true;
+  getWeatherByTime(lat: number, lon: number): void {
+    this.citySearchService
+      .getWeatherByCity(lat, lon)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((info) => {
+        if (info) {
+          this.updateUrl(lat, lon, 'time');
+          this.weatherInfo = {
+            cityName: info.city.name,
+            list: info.list,
+            period: this.isCheckedTime,
+          };
+        }
+      });
+  }
+
+  getWeatherByDays(lat: number, lon: number): void {
+    this.citySearchService
+      .getWeatherByDays(lat, lon)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+
+      .subscribe((info) => {
+        if (info) {
+          this.updateUrl(lat, lon, 'days');
+
+          const currentDate = new Date();
+          const daysCount = 5;
+          const days: WeatherInfo[] = [];
+
+          for (let i = 0; i < daysCount; i++) {
+            const currDay = info.list.find(
+              (el) =>
+                new Date(el.dt_txt).getDate() === currentDate.getDate() &&
+                new Date(el.dt_txt).getMonth() === currentDate.getMonth()
+            );
+
+            if (currDay) {
+              days.push(currDay);
+            }
+
+            currentDate.setDate(currentDate.getDate() + 1);
+          }
+
+          this.weatherInfo = {
+            cityName: info.city.name,
+            list: days,
+            period: this.isCheckedTime,
+          };
+        }
+      });
+  }
+
+  updateUrl(lat: number, lon: number, filter: string): void {
+    this.router.navigate(['/main'], {
+      queryParams: {
+        lat: lat,
+        lon: lon,
+        by: filter,
+      },
+    });
   }
 }

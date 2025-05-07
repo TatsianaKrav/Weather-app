@@ -5,7 +5,7 @@
   <h1>Weather</h1>
   <app-search #search></app-search>
 
-  @if (search.weatherInfo && search.hasData === "true") {
+  @if (search.weatherInfo && search.hasData) {
     <app-table [weatherData]="search.weatherInfo"></app-table>
   }
 </div>
