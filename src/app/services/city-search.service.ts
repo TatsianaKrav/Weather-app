@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { inject, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, of, throwError } from 'rxjs';
 import { CityInfoResponse } from '../models/city-info-response';
 import { WeatherResponse } from '../models/weather-response';
@@ -9,10 +9,10 @@ import { API_KEY, BASE_API_URL_TOKEN } from '../../environments/environment.toke
   providedIn: 'root'
 })
 export class CitySearchService {
+  private apiKey = inject(API_KEY);
   hasError = new BehaviorSubject(false);
 
   constructor(@Inject(BASE_API_URL_TOKEN) private baseApi: string,
-    @Inject(API_KEY) private apiKey: string,
     private http: HttpClient) {
   }
 

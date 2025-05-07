@@ -61,6 +61,7 @@ export class SearchComponent implements OnInit {
         }
       })
   }
+  //switchMap, observ
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(params => {
