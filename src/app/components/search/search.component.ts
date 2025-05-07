@@ -2,7 +2,7 @@ import { Component, DestroyRef, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CitySearchService } from '../../services/city-search.service';
 import { WeatherResponse } from '../../models/weather-response';
-import { debounceTime } from 'rxjs';
+import { debounceTime, Observable, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -53,7 +53,6 @@ export class SearchComponent implements OnInit {
         }
       });
   }
-  //switchMap, observ
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -69,6 +68,24 @@ export class SearchComponent implements OnInit {
           });
       }
     });
+
+    //switchMap ?
+
+    /*   .pipe(
+        switchMap(params => {
+          const lat = params['lat'];
+          const lon = params['lon'];
+
+          return this.citySearchService.getWeatherByCity(lat, lon);
+        })
+      )
+      .subscribe((info) => {
+
+        if (info) {
+          this.hasData = 'true';
+          this.weatherInfo = info;
+        }
+      }); */
 
     this.citySearchService.hasError.subscribe((value) => {
       value
