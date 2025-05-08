@@ -13,7 +13,7 @@ import { WeatherResponse } from '../models/weather-response';
 import {
   API_KEY,
   BASE_API_URL_TOKEN,
-} from '../../environments/environment.token';
+} from '../../../environments/environment.token';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +25,7 @@ export class CitySearchService {
   constructor(
     @Inject(BASE_API_URL_TOKEN) private baseApi: string,
     private http: HttpClient
-  ) {}
+  ) { }
 
   getCityInfo(cityName: string): Observable<CityInfoResponse[]> {
     return this.http
@@ -45,7 +45,7 @@ export class CitySearchService {
   ): Observable<WeatherResponse> {
     return this.http
       .get<WeatherResponse>(
-        `${this.baseApi}/data/2.5/orecast?lat=${latitude}&lon=${longitud}&appid=${this.apiKey}&cnt=8`
+        `${this.baseApi}/data/2.5/forecast?lat=${latitude}&lon=${longitud}&appid=${this.apiKey}&cnt=8`
       )
       .pipe(
         debounceTime(1000),

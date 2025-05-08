@@ -1,6 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { catchError, finalize } from 'rxjs';
-import { LoaderService } from '../../services/loader.service';
+import { LoaderService } from '../../shared/services/loader.service';
 import { inject } from '@angular/core';
 import { ErrorService } from '../../shared/services/error.service';
 

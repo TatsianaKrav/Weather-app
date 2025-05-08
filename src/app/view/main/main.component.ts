@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { SearchComponent } from '../search/search.component';
-import { TableComponent } from '../table/table.component';
+import { SearchComponent } from '../../shared/components/search/search.component';
+import { TableComponent } from '../../shared/components/table/table.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { LoaderService } from '../../services/loader.service';
+import { LoaderService } from '../../shared/services/loader.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ErrorService } from '../../shared/services/error.service';
@@ -25,7 +25,7 @@ export class MainComponent implements OnInit {
     public loaderService: LoaderService,
     public errorService: ErrorService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.errorService.isShowed$.subscribe((value) => {
