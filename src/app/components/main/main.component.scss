@@ -1,5 +1,9 @@
 @use "../../../styles.scss" as *;
 
+body {
+  position: relative;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -8,4 +12,10 @@
   justify-content: center;
   flex-direction: column;
   gap: 15px;
+}
+
+p-progress-spinner {
+  position: absolute;
+  top: calc(50% - 50px);
+  left: calc(50% - 50px);
 }

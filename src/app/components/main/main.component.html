@@ -9,3 +9,13 @@
     <app-table [weatherData]="search.weatherInfo"></app-table>
   }
 </div>
+
+@if (loaderService.isShowed$.getValue()) {
+  <p-progress-spinner
+    strokeWidth="5"
+    ariaLabel="loading"
+    [style]="{ width: '100px', height: '100px' }"
+  />
+}
+
+<p-toast position="bottom-center"></p-toast>
