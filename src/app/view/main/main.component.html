@@ -1,0 +1,21 @@
+<div
+  class="container"
+  (click)="search.hideMenu()"
+>
+  <h1>Weather</h1>
+  <app-search #search></app-search>
+
+  @if (search.weatherInfo && search.hasData) {
+    <app-table [weatherData]="search.weatherInfo"></app-table>
+  }
+</div>
+
+@if (loaderService.isShowed$.getValue()) {
+  <p-progress-spinner
+    strokeWidth="5"
+    ariaLabel="loading"
+    [style]="{ width: '100px', height: '100px' }"
+  />
+}
+
+<p-toast position="bottom-center"></p-toast>

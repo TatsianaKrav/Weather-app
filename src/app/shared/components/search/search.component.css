@@ -1,0 +1,59 @@
+.search-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.search-wrapper .dropdown {
+  position: absolute;
+  top: 1.3rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s linear;
+  padding: 1rem;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  border-top: none;
+  border-radius: 5px;
+  background-color: #fff;
+  width: 100%;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.search-wrapper .dropdown.active {
+  opacity: 1;
+  visibility: visible;
+}
+.search-wrapper .dropdown .option {
+  cursor: pointer;
+  width: 100%;
+}
+.search-wrapper .no-data {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+.search-wrapper .tabs {
+  align-self: flex-start;
+}
+.search-wrapper .tabs input[type="radio"] {
+  display: none;
+}
+.search-wrapper .tabs label {
+  cursor: pointer;
+  color: black;
+  border-bottom: 1px solid gray;
+  padding: 0.5rem;
+  border-radius: 3px;
+}
+.search-wrapper .tabs input[type="radio"]:checked + label {
+  cursor: default;
+  border: 1px solid gray;
+  border-bottom: 1px solid transparent;
+} /*# sourceMappingURL=search.component.css.map */

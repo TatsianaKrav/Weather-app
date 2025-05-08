@@ -1,0 +1,24 @@
+.menu {
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s linear;
+  padding: 1rem;
+  border: 1px solid #000;
+  border-top: none;
+  border-radius: 5px;
+
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .option {
+    cursor: pointer;
+  }
+}
